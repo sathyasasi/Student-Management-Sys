@@ -1,0 +1,43 @@
+exports.login = function(req, res, next){
+  var user = req.body.user;
+  var password = user.password;
+
+  if(typeof user.phone == 'undefined' || user.phone == ''){
+    res.status(400).send('phone is missing');
+    return next();
+  } else {
+    var phone = user.phone;
+    if(phone.substr(0, 3) != '+91' && phone.split(phone.substr(0, 3))[1].length != 10) {
+      res.status(400).send('Phone number should belong to India.');
+      return next();
+    }
+  }
+
+  User.findOne({'phone': user.phone}, function(err, user){
+    if(err){
+      res.status(400).send('error lookingup user');
+      return next();
+    } else if(!user) {
+      res.status(400).send('No user exists');
+      return next();
+    } else if(user){
+        var existing = common.decrypt(user._password);
+        if (password !== existing) {
+          res.status(400).send('Password is wrong');
+          return next();
+        } else {
+        user.createSession(function(err, user){
+          if(err){
+            res.status(400).send('error logging in user');
+            return next();
+          } else if(user){
+            res.status(200).send(new Response.respondWithData(user));
+            return next();
+          }
+        });
+      }
+    }
+  });
+}
+
+

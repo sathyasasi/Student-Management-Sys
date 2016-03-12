@@ -2,26 +2,37 @@
 var bodyParser = require("body-parser");
 var express = require('express');
 var path = require('path');
-//var cloudinary = require('cloudinary');
 var config = require('./helpers/config');
 var db = require('./helpers/db');
 var routes = require('./routes');
+var fs = require('fs');
+var express = require('express');
 
 var app = express();
-var port = Number(process.env.PORT) || '5451';
+var port = Number(process.env.PORT) || '8080';
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+//app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({limit: '50mb'}));
+//app.use(bodyParser.urlencoded({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
-//cloudinary configuration
-/*cloudinary.config({cloud_name: config.cloudinary.cloud_name,
-  api_key: config.cloudinary.api_key,
-  api_secret: config.cloudinary.api_secret
-});*/
+
+
 
 //connect to the DB
-db.connect(config.database.url, config.database.options);
+var dbcon = process.env.MONGOLAB_URI || config.database.url;
 
+db.connect(dbcon, config.database.options);
+
+process.on('uncaughtException', function (err) {
+  console.log('Caught exception: ' + err);
+});
+
+app.use(function(err, req, res, next){
+    console.error(err.stack);
+    res.status(500).send(new response('Data Something went wrong!'));
+});
 
 //starts and listen to the port
 app.listen(port, function(){
