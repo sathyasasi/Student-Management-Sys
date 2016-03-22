@@ -1,9 +1,12 @@
+//modules
 var mongoose = require('mongoose');
 var path = require('path');
 var bodyParser = require('body-parser');
+
+//models
 var Student = require('../models/student');
 var Staff = require('../models/staff');
-//var error = require('../helpers/error.js');
+
 
 exports.updatestudent = function(req, res, next){
   var name = req.body.name;

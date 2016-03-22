@@ -4,7 +4,7 @@ var statustypes = ["Active","Inactive"];
 
 var staffSchema = new mongoose.Schema({
   name      : {type: String, required: true},
-  staffId   : {type: Number, required: true,unique: true},
+  staffId        : {type: Number, required: true,unique: true},
   email     : {type: String, required: true,unique: true},
   password  : {type: String, required: true,unique: true},
   phone     : {type: Number, required: true,unique: true},
@@ -21,9 +21,7 @@ var staffSchema = new mongoose.Schema({
   status    : {type:String,enum:statustypes},
   deptId    : {type: mongoose.Schema.Types.ObjectId, ref:'dept'},
   createdAt : {type: Date},
-  updatedAt : {type: Date},
-  voicetype : {type: String},
-  voice     : {type: String},
+  updatedAt : {type: Date}
 }, {collection: 'staff'});
 
 var Staff = mongoose.model('staff' , staffSchema);

@@ -11,11 +11,11 @@ var express = require('express');
 var app = express();
 var port = Number(process.env.PORT) || '8080';
 
-//app.use(bodyParser.json());
-//app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+//app.use(bodyParser.json({limit: '50mb'}));
 //app.use(bodyParser.urlencoded({limit: '50mb'}));
-app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+//app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 
 
@@ -25,9 +25,9 @@ var dbcon = process.env.MONGOLAB_URI || config.database.url;
 
 db.connect(dbcon, config.database.options);
 
-process.on('uncaughtException', function (err) {
+/*process.on('uncaughtException', function (err) {
   console.log('Caught exception: ' + err);
-});
+});*/
 
 app.use(function(err, req, res, next){
     console.error(err.stack);
